@@ -16,13 +16,13 @@ interface RocketData {
   country?: string;
 }
 
+interface LaunchpadData {
+  name?: string;
+}
+
 interface PayloadData {
   type?: string;
   orbit?: string;
-}
-
-interface LaunchpadData {
-  name?: string;
 }
 
 interface Links {
@@ -37,19 +37,20 @@ interface EnrichedLaunch {
   name: string;
   details?: string;
   links: Links;
-  rocketData: RocketData;
-  launchpadData: LaunchpadData;
-  payloadData: PayloadData;
+  rocketData?: RocketData;
+  launchpadData?: LaunchpadData;
+  payloadData?: PayloadData;
   date_utc: string;
   success?: boolean;
   upcoming?: boolean;
-  flight_number: number;
+  flight_number?: number;
 }
 
 interface LaunchModalProps {
   launch: EnrichedLaunch | null;
   onClose: () => void;
 }
+
 
 export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
   if (!launch) return null;

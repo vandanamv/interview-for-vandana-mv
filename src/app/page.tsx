@@ -134,10 +134,12 @@ const { launches, loading, error } = useLaunches({ filter, dateRange });
         </div>
 
         <LaunchModal
-          launch={selectedLaunch}
-          onClose={() => setSelectedLaunch(null)}
-        />
+  launch={selectedLaunch}
+  onClose={() => setSelectedLaunch(null)}
+/>
+
       </main>
     </div>
   );
 }
+
