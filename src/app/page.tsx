@@ -142,4 +142,3 @@ const { launches, loading, error } = useLaunches({ filter, dateRange });
     </div>
   );
 }
-

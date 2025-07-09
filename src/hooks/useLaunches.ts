@@ -6,7 +6,7 @@ interface Launch {
   id: string;
   name: string;
   date_utc: string;
-  success: boolean;
+  success: boolean | null;
   upcoming: boolean;
   rocket: string;
   launchpad: string;
@@ -19,6 +19,7 @@ interface Launch {
     wikipedia?: string;
     webcast?: string;
   };
+  details?: string;
 }
 
 interface Rocket {
@@ -45,7 +46,6 @@ export interface EnrichedLaunch extends Launch {
   rocketData?: Rocket;
   launchpadData?: Launchpad;
   payloadData?: Payload;
-  details?: string;
 }
 
 export type FilterType = {
@@ -62,12 +62,18 @@ export const useLaunches = ({ filter, dateRange }: FilterType) => {
     const fetchAll = async () => {
       try {
         setLoading(true);
+        setError("");
+
         const [launchesRes, rocketsRes, padsRes, payloadsRes] = await Promise.all([
-          axios.get<Launch[]>("https://api.spacexdata.com/v4/launches"),
-          axios.get<Rocket[]>("https://api.spacexdata.com/v4/rockets"),
-          axios.get<Launchpad[]>("https://api.spacexdata.com/v4/launchpads"),
-          axios.get<Payload[]>("https://api.spacexdata.com/v4/payloads"),
-        ]);
+  axios.get<Launch[]>("https://api.spacexdata.com/v4/launches"),
+  axios.get<Rocket[]>("https://api.spacexdata.com/v4/rockets"),
+  axios.get<Launchpad[]>("https://api.spacexdata.com/v4/launchpads"),
+  axios.get<Payload[]>("https://api.spacexdata.com/v4/payloads"),
+]);
+console.log('Launches:', launchesRes.data);
+console.log('Rockets:', rocketsRes.data);
+console.log('Launchpads:', padsRes.data);
+console.log('Payloads:', payloadsRes.data);
 
         const rocketMap = new Map(rocketsRes.data.map((r) => [r.id, r]));
         const launchpadMap = new Map(padsRes.data.map((p) => [p.id, p]));
@@ -82,22 +88,27 @@ export const useLaunches = ({ filter, dateRange }: FilterType) => {
             ...launch,
             rocketData: rocketMap.get(launch.rocket),
             launchpadData: launchpadMap.get(launch.launchpad),
-            payloadData: payloadMap.get(launch.payloads[0]),
-            links: launch.links || { patch: {} }, // Ensure links property is included
-          }));
+            payloadData: launch.payloads.length > 0 ? payloadMap.get(launch.payloads[0]) : undefined,
+            links: launch.links || { patch: {} },
+            details: launch.details || "",
+          }))
+          .sort((a, b) => new Date(b.date_utc).getTime() - new Date(a.date_utc).getTime());
 
-        if (filter === "upcoming") {
-          enriched = enriched.filter((l) => l.upcoming);
-        } else if (filter === "successful") {
-          enriched = enriched.filter((l) => !l.upcoming && l.success === true);
-        } else if (filter === "failed") {
-          enriched = enriched.filter((l) => !l.upcoming && l.success === false);
+        switch (filter) {
+          case "upcoming":
+            enriched = enriched.filter((l) => l.upcoming);
+            break;
+          case "successful":
+            enriched = enriched.filter((l) => !l.upcoming && l.success === true);
+            break;
+          case "failed":
+            enriched = enriched.filter((l) => !l.upcoming && l.success === false);
+            break;
         }
 
         setLaunches(enriched);
-        setError("");
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching data:", err);
         setError("Failed to load launch data.");
       } finally {
         setLoading(false);
