@@ -1,3 +1,4 @@
+//src/components/EmptyState.tsx
 interface Props {
   message?: string;
 }

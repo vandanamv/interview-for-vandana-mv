@@ -1,3 +1,4 @@
+// / File: spacex-dashboard/src/app/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -20,7 +21,7 @@ export default function HomePage() {
   });
 
   // ✅ FIXED ARGUMENT STRUCTURE
-  const { launches, loading, error } = useLaunches({ filter, dateRange });
+const { launches, loading, error } = useLaunches({ filter, dateRange });
 
   const launchesPerPage = 12;
   const totalPages = Math.ceil(launches.length / launchesPerPage);

@@ -1,3 +1,4 @@
+//src/components/Header.tsx
 import Image from "next/image";
 import logo from "@/images/image.png"; 
 

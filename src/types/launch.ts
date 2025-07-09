@@ -1,3 +1,4 @@
+//src/types/launch.ts
 export interface Launch {
   id: string;
   name: string;

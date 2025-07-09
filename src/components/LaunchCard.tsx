@@ -1,3 +1,4 @@
+// File: spacex-dashboard/src/components/LaunchCard.tsx
 import { Launch } from "@/types/launch";
 import Image from 'next/image';
 
