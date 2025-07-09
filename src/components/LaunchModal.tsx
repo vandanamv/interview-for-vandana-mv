@@ -1,4 +1,4 @@
-//src/components/LaunchModal.tsx
+// src/components/LaunchModal.tsx
 "use client";
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -41,7 +41,7 @@ interface EnrichedLaunch {
   launchpadData?: LaunchpadData;
   payloadData?: PayloadData;
   date_utc: string;
-  success?: boolean; 
+  success?: boolean;
   upcoming?: boolean;
   flight_number?: number;
 }
@@ -50,7 +50,6 @@ interface LaunchModalProps {
   launch: EnrichedLaunch | null;
   onClose: () => void;
 }
-
 
 export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
   if (!launch) return null;
@@ -68,7 +67,11 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
     flight_number,
   } = launch;
 
-  const { type: rocketType, name: rocketName, company, country } = rocketData;
+  // Safely access properties of rocketData using optional chaining
+  const rocketType = rocketData?.type;
+  const rocketName = rocketData?.name;
+  const company = rocketData?.company;
+  const country = rocketData?.country;
 
   const status = upcoming ? "Upcoming" : success ? "Success" : "Failed";
   const statusColor =
