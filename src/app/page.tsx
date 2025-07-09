@@ -1,5 +1,4 @@
-"use client";
-
+"use client"; 
 // React and custom hooks/components imports
 import { useState } from "react";
 import { useLaunches, EnrichedLaunch } from "@/hooks/useLaunches";
@@ -9,8 +8,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import EmptyState from "@/components/EmptyState";
 import Pagination from "@/components/Pagination";
 import Header from "@/components/Header";
-import DateFilterDropdown from "@/components/DateFilterDropdown";
-
+import DateFilterDropdown from "@/components/DateFilterDropdown"; 
 export default function HomePage() {
   const [filter, setFilter] = useState<"all" | "upcoming" | "successful" | "failed">("all");
   const [selectedLaunch, setSelectedLaunch] = useState<EnrichedLaunch | null>(null);
@@ -19,15 +17,11 @@ export default function HomePage() {
     start: new Date(new Date().setMonth(new Date().getMonth() - 6)),
     end: new Date(),
   });
-
-  // Use the hook with a single object argument
-  const { launches, loading, error } = useLaunches({ filter, dateRange });
-
-  const launchesPerPage = 12;
-  const totalPages = Math.ceil(launches.length / launchesPerPage);
-  const startIndex = (currentPage - 1) * launchesPerPage;
-  const paginatedLaunches = launches.slice(startIndex, startIndex + launchesPerPage);
-
+  const { launches, loading, error } = useLaunches(filter, dateRange);
+  const launchesPerPage = 12; 
+  const totalPages = Math.ceil(launches.length / launchesPerPage); 
+  const startIndex = (currentPage - 1) * launchesPerPage; 
+  const paginatedLaunches = launches.slice(startIndex, startIndex + launchesPerPage); 
   return (
     <div className="min-h-screen bg-white">
       {/* App header */}
@@ -36,15 +30,15 @@ export default function HomePage() {
         <div className="flex justify-between items-center mb-4">
           <DateFilterDropdown
             onDateChange={(start, end) => {
-              setDateRange({ start, end });
-              setCurrentPage(1);
+              setDateRange({ start, end }); 
+              setCurrentPage(1); 
             }}
           />
           <FilterTabs
             current={filter}
             onChange={(f) => {
               setFilter(f);
-              setCurrentPage(1);
+              setCurrentPage(1); 
             }}
           />
         </div>
@@ -79,7 +73,7 @@ export default function HomePage() {
                   <tr
                     key={launch.id}
                     className="hover:bg-blue-50 cursor-pointer"
-                    onClick={() => setSelectedLaunch(launch)}
+                    onClick={() => setSelectedLaunch(launch)} 
                   >
                     <td className="px-4 py-3">
                       {(startIndex + index + 1).toString().padStart(2, "0")}
@@ -145,3 +139,5 @@ export default function HomePage() {
     </div>
   );
 }
+
+
