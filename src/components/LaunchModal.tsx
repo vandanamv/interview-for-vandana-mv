@@ -4,15 +4,19 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { FaYoutube, FaWikipediaW } from "react-icons/fa";
 import { SiNasa } from "react-icons/si";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 
 const FormattedDate = dynamic(() => import("@/components/FormattedDate"), {
   ssr: false,
 });
 
+import { EnrichedLaunch } from "@/hooks/useLaunches";
+
 interface LaunchModalProps {
-  launch: any;
+  launch: EnrichedLaunch | null;
   onClose: () => void;
 }
+
 
 export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
   if (!launch) return null;

@@ -5,6 +5,8 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { FaCalendarAlt } from "react-icons/fa";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 const quickRanges = [
   { label: "Past week", days: 7 },
   { label: "Past month", days: 30 },
@@ -15,7 +17,7 @@ const quickRanges = [
 ];
 
 interface Props {
-  onDateChange: (start: Date, end: Date) => void;
+  onDateChange: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 // This component provides a dropdown for selecting date ranges
