@@ -1,10 +1,8 @@
 "use client";
-
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { FaYoutube, FaWikipediaW } from "react-icons/fa";
 import { SiNasa } from "react-icons/si";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 
 const FormattedDate = dynamic(() => import("@/components/FormattedDate"), {
   ssr: false,
@@ -16,7 +14,6 @@ interface LaunchModalProps {
   launch: EnrichedLaunch | null;
   onClose: () => void;
 }
-
 
 export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
   if (!launch) return null;
@@ -32,8 +29,9 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
     success,
     upcoming,
     flight_number,
-    rocketData: { type: rocketType, name: rocketName, company, country } = {},
   } = launch;
+
+  const { type: rocketType, name: rocketName, company, country } = rocketData || {};
 
   const status = upcoming ? "Upcoming" : success ? "Success" : "Failed";
   const statusColor =
@@ -52,7 +50,6 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
         >
           &times;
         </button>
-
         {/* Header Block */}
         <div className="flex items-start gap-4 mb-4">
           {links.patch?.small && (
@@ -64,7 +61,6 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
               className="rounded"
             />
           )}
-
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
               <h2 className="text-base font-semibold text-gray-900">{name}</h2>
@@ -74,11 +70,9 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
                 {status}
               </span>
             </div>
-
             <p className="text-sm text-gray-700 font-medium">
-              {rocketData?.name || "N/A"}
+              {rocketName || "N/A"}
             </p>
-
             <div className="flex items-center gap-4 mt-1 text-xl text-gray-600">
               <a
                 href="https://www.nasa.gov"
@@ -108,7 +102,6 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
             </div>
           </div>
         </div>
-
         {/* Description */}
         {details && (
           <p className="text-sm text-gray-700 mb-4">
@@ -125,7 +118,6 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
             )}
           </p>
         )}
-
         {/* Metadata */}
         <div className="text-sm text-gray-700 divide-y divide-gray-300">
           <div className="flex py-2">

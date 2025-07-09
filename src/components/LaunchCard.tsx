@@ -1,5 +1,5 @@
 import { Launch } from "@/types/launch";
-
+import Image from 'next/image';
 interface Props {
   launch: Launch;
   onClick: () => void;
@@ -11,7 +11,7 @@ export default function LaunchCard({ launch, onClick }: Props) {
       className="bg-white p-4 rounded-xl shadow-md hover:shadow-xl transition cursor-pointer border hover:border-blue-500"
       onClick={onClick}
     >
-      <img
+      <Image
         src={launch.links.patch.small || "/fallback.png"}
         alt={launch.name}
         className="w-16 h-16 object-contain mb-4"
