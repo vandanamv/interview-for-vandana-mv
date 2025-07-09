@@ -1,4 +1,3 @@
-
 declare module "react-date-range" {
   import * as React from "react";
 
@@ -20,7 +19,9 @@ declare module "react-date-range" {
     showSelectionPreview?: boolean;
     moveRangeOnFirstSelection?: boolean;
     maxDate?: Date;
-    [key: string]: any;
+    className?: string;
+    style?: React.CSSProperties;
+    [key: string]: unknown;
   }
 
   export class DateRangePicker extends React.Component<DateRangePickerProps> {}
