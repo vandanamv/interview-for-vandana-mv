@@ -46,7 +46,6 @@ export interface EnrichedLaunch extends Launch {
   launchpadData?: Launchpad;
   payloadData?: Payload;
   details?: string;
-  success?: boolean; 
 }
 
 export type FilterType = {
