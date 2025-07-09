@@ -1,17 +1,24 @@
-//src/hooks/useLaunches.ts
+// In useLaunches.ts
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// Types from SpaceX API
 interface Launch {
   id: string;
   name: string;
   date_utc: string;
-  success: boolean | undefined;
+  success: boolean | null;
   upcoming: boolean;
   rocket: string;
   launchpad: string;
   payloads: string[];
+  links: {
+    patch: {
+      small?: string;
+      large?: string;
+    };
+    wikipedia?: string;
+    webcast?: string;
+  };
 }
 
 interface Rocket {
@@ -39,16 +46,6 @@ export interface EnrichedLaunch extends Launch {
   launchpadData?: Launchpad;
   payloadData?: Payload;
   details?: string;
-  links: {
-    patch: {
-      small?: string;
-      large?: string;
-    };
-    wikipedia?: string;
-    webcast?: string;
-    [key: string]: unknown;
-  };
-  flight_number?: number;
 }
 
 export type FilterType = {
@@ -65,7 +62,6 @@ export const useLaunches = ({ filter, dateRange }: FilterType) => {
     const fetchAll = async () => {
       try {
         setLoading(true);
-
         const [launchesRes, rocketsRes, padsRes, payloadsRes] = await Promise.all([
           axios.get<Launch[]>("https://api.spacexdata.com/v4/launches"),
           axios.get<Rocket[]>("https://api.spacexdata.com/v4/rockets"),
@@ -87,6 +83,7 @@ export const useLaunches = ({ filter, dateRange }: FilterType) => {
             rocketData: rocketMap.get(launch.rocket),
             launchpadData: launchpadMap.get(launch.launchpad),
             payloadData: payloadMap.get(launch.payloads[0]),
+            links: launch.links || { patch: {} }, // Ensure links property is included
           }));
 
         if (filter === "upcoming") {
