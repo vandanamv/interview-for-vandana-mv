@@ -6,7 +6,7 @@ interface Launch {
   id: string;
   name: string;
   date_utc: string;
-  success: boolean | null;
+  success: boolean;
   upcoming: boolean;
   rocket: string;
   launchpad: string;
@@ -46,6 +46,7 @@ export interface EnrichedLaunch extends Launch {
   launchpadData?: Launchpad;
   payloadData?: Payload;
   details?: string;
+  success?: boolean; 
 }
 
 export type FilterType = {
