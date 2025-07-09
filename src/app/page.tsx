@@ -20,7 +20,7 @@ export default function HomePage() {
     end: new Date(),
   });
 
-  // Update the call to useLaunches to pass a single object argument
+  // Use the hook with a single object argument
   const { launches, loading, error } = useLaunches({ filter, dateRange });
 
   const launchesPerPage = 12;

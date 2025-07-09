@@ -49,9 +49,13 @@ export interface EnrichedLaunch extends Launch {
   flight_number?: number;
 }
 
-type FilterType = "all" | "upcoming" | "successful" | "failed";
+// Accept an object with filter and dateRange
+export type FilterType = {
+  filter: "all" | "upcoming" | "successful" | "failed";
+  dateRange: { start: Date; end: Date };
+};
 
-export const useLaunches = (filter: FilterType) => {
+export const useLaunches = ({ filter, dateRange }: FilterType) => {
   const [launches, setLaunches] = useState<EnrichedLaunch[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -72,12 +76,21 @@ export const useLaunches = (filter: FilterType) => {
         const launchpadMap = new Map(padsRes.data.map((p) => [p.id, p]));
         const payloadMap = new Map(payloadsRes.data.map((p) => [p.id, p]));
 
-        let enriched = launchesRes.data.map((launch) => ({
-          ...launch,
-          rocketData: rocketMap.get(launch.rocket),
-          launchpadData: launchpadMap.get(launch.launchpad),
-          payloadData: payloadMap.get(launch.payloads?.[0]),
-        }));
+        let enriched = launchesRes.data
+          // Filter by date range
+          .filter((launch) => {
+            const launchDate = new Date(launch.date_utc);
+            return (
+              launchDate >= dateRange.start &&
+              launchDate <= dateRange.end
+            );
+          })
+          .map((launch) => ({
+            ...launch,
+            rocketData: rocketMap.get(launch.rocket),
+            launchpadData: launchpadMap.get(launch.launchpad),
+            payloadData: payloadMap.get(launch.payloads?.[0]),
+          }));
 
         // 🔍 Filter launches
         if (filter === "upcoming") {
@@ -99,7 +112,7 @@ export const useLaunches = (filter: FilterType) => {
     };
 
     fetchAll();
-  }, [filter]);
+  }, [filter, dateRange]);
 
   return { launches, loading, error };
 };
