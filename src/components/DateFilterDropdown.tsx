@@ -1,11 +1,9 @@
 "use client";
 import { useState } from "react";
-import { DateRangePicker } from "react-date-range";
+import { DateRangePicker, Range } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { FaCalendarAlt } from "react-icons/fa";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 
 const quickRanges = [
   { label: "Past week", days: 7 },
@@ -17,10 +15,9 @@ const quickRanges = [
 ];
 
 interface Props {
-  onDateChange: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onDateChange: (startDate: Date, endDate: Date) => void;
 }
 
-// This component provides a dropdown for selecting date ranges
 export default function DateFilterDropdown({ onDateChange }: Props) {
   const [showPicker, setShowPicker] = useState(false);
   const [range, setRange] = useState([
@@ -30,7 +27,6 @@ export default function DateFilterDropdown({ onDateChange }: Props) {
       key: "selection",
     },
   ]);
-
   const [selectedRangeLabel, setSelectedRangeLabel] = useState("Past 6 months");
 
   const applyQuickRange = (days: number, label: string) => {
@@ -44,9 +40,9 @@ export default function DateFilterDropdown({ onDateChange }: Props) {
     setShowPicker(false);
   };
 
-  const handleCalendarChange = (item: any) => {
-    setRange([item.selection]);
-    onDateChange(item.selection.startDate, item.selection.endDate);
+  const handleCalendarChange = (item: Range) => {
+    setRange([item]);
+    onDateChange(item.startDate!, item.endDate!);
   };
 
   return (
@@ -58,54 +54,46 @@ export default function DateFilterDropdown({ onDateChange }: Props) {
         <FaCalendarAlt />
         {selectedRangeLabel}
       </button>
-
       {showPicker && (
-      <div className="fixed inset-0 bg-gray-200/70 backdrop-sm z-50 flex justify-center items-center">
-        <div className="relative flex bg-white rounded-lg shadow-lg p-4 border border-gray-200">
-        {/* Quick Ranges */}
-        <div className="flex flex-col gap-2 text-sm text-gray-800 w-48 mr-4 border-r pr-2">
-        {quickRanges.map((r) => (
-          <button
-            key={r.label}
-            onClick={() => applyQuickRange(r.days, r.label)}
-            className="hover:bg-gray-100 rounded px-4 py-2 text-left"
-          >
-            {r.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Calendar Styles */}
-      <style jsx global>{`
-        .rdrDateDisplayWrapper {
-        display: none !important; /* Hides the date inputs */
-        }
-
-        .rdrDefinedRangesWrapper,
-        .rdrStaticRanges {
-        display: none !important; /* Hides built-in quick ranges */
-        }
-
-        .rdrDateRangePickerWrapper .rdrMonth:not(:first-child) {
-        display: none; /* Shows only one month */
-        }
-      `}</style>
-
-
-
-      <DateRangePicker
-        ranges={range}
-        onChange={handleCalendarChange}
-        months={1}
-        direction="horizontal"
-        showSelectionPreview={true}
-        moveRangeOnFirstSelection={false}
-        maxDate={new Date()}
-      />
-    </div>
-  </div>
-)}
-
+        <div className="fixed inset-0 bg-gray-200/70 backdrop-sm z-50 flex justify-center items-center">
+          <div className="relative flex bg-white rounded-lg shadow-lg p-4 border border-gray-200">
+            {/* Quick Ranges */}
+            <div className="flex flex-col gap-2 text-sm text-gray-800 w-48 mr-4 border-r pr-2">
+              {quickRanges.map((r) => (
+                <button
+                  key={r.label}
+                  onClick={() => applyQuickRange(r.days, r.label)}
+                  className="hover:bg-gray-100 rounded px-4 py-2 text-left"
+                >
+                  {r.label}
+                </button>
+              ))}
+            </div>
+            {/* Calendar Styles */}
+            <style jsx global>{`
+              .rdrDateDisplayWrapper {
+                display: none !important; /* Hides the date inputs */
+              }
+              .rdrDefinedRangesWrapper,
+              .rdrStaticRanges {
+                display: none !important; /* Hides built-in quick ranges */
+              }
+              .rdrDateRangePickerWrapper .rdrMonth:not(:first-child) {
+                display: none; /* Shows only one month */
+              }
+            `}</style>
+            <DateRangePicker
+              ranges={range}
+              onChange={handleCalendarChange}
+              months={1}
+              direction="horizontal"
+              showSelectionPreview={true}
+              moveRangeOnFirstSelection={false}
+              maxDate={new Date()}
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 }
