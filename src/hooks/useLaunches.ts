@@ -36,7 +36,17 @@ export interface EnrichedLaunch extends Launch {
   rocketData?: Rocket;
   launchpadData?: Launchpad;
   payloadData?: Payload;
-  details?: string; 
+  details?: string;
+  links: {
+    patch: {
+      small?: string;
+      large?: string;
+    };
+    wikipedia?: string;
+    webcast?: string;
+    [key: string]: unknown;
+  };
+  flight_number?: number;
 }
 
 type FilterType = "all" | "upcoming" | "successful" | "failed";
