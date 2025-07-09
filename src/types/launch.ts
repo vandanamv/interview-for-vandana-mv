@@ -24,6 +24,29 @@ interface Links {
   webcast?: string;
 }
 
+export interface Launch {
+  id: string;
+  name: string;
+  date_utc: string;
+  success: boolean;
+  upcoming: boolean;
+  links: {
+    patch: {
+      small?: string;
+      large?: string;
+    };
+  };
+  rocket: {
+    name: string;
+  };
+  launchpad: {
+    name: string;
+    locality: string;
+  };
+  payloads: {
+    orbit: string;
+  }[];
+}
 export interface EnrichedLaunch {
   id: string;
   name: string;
