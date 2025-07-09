@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+// Types from SpaceX API
 interface Launch {
   id: string;
   name: string;
@@ -49,7 +50,6 @@ export interface EnrichedLaunch extends Launch {
   flight_number?: number;
 }
 
-// Accept an object with filter and dateRange
 export type FilterType = {
   filter: "all" | "upcoming" | "successful" | "failed";
   dateRange: { start: Date; end: Date };
@@ -64,7 +64,7 @@ export const useLaunches = ({ filter, dateRange }: FilterType) => {
     const fetchAll = async () => {
       try {
         setLoading(true);
-        // 🔄 Fetch all data
+
         const [launchesRes, rocketsRes, padsRes, payloadsRes] = await Promise.all([
           axios.get<Launch[]>("https://api.spacexdata.com/v4/launches"),
           axios.get<Rocket[]>("https://api.spacexdata.com/v4/rockets"),
@@ -77,22 +77,17 @@ export const useLaunches = ({ filter, dateRange }: FilterType) => {
         const payloadMap = new Map(payloadsRes.data.map((p) => [p.id, p]));
 
         let enriched = launchesRes.data
-          // Filter by date range
           .filter((launch) => {
             const launchDate = new Date(launch.date_utc);
-            return (
-              launchDate >= dateRange.start &&
-              launchDate <= dateRange.end
-            );
+            return launchDate >= dateRange.start && launchDate <= dateRange.end;
           })
           .map((launch) => ({
             ...launch,
             rocketData: rocketMap.get(launch.rocket),
             launchpadData: launchpadMap.get(launch.launchpad),
-            payloadData: payloadMap.get(launch.payloads?.[0]),
+            payloadData: payloadMap.get(launch.payloads[0]),
           }));
 
-        // 🔍 Filter launches
         if (filter === "upcoming") {
           enriched = enriched.filter((l) => l.upcoming);
         } else if (filter === "successful") {
