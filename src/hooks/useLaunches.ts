@@ -7,7 +7,7 @@ interface Launch {
   id: string;
   name: string;
   date_utc: string;
-  success: boolean | null;
+  success: boolean | undefined;
   upcoming: boolean;
   rocket: string;
   launchpad: string;

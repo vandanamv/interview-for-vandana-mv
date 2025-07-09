@@ -41,7 +41,7 @@ interface EnrichedLaunch {
   launchpadData?: LaunchpadData;
   payloadData?: PayloadData;
   date_utc: string;
-  success?: boolean;
+  success?: boolean; 
   upcoming?: boolean;
   flight_number?: number;
 }
