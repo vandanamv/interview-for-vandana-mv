@@ -49,7 +49,7 @@ export const useLaunches = (filter: FilterType) => {
     const fetchAll = async () => {
       try {
         setLoading(true);
-
+        // 🔄 Fetch all data
         const [launchesRes, rocketsRes, padsRes, payloadsRes] = await Promise.all([
           axios.get<Launch[]>("https://api.spacexdata.com/v4/launches"),
           axios.get<Rocket[]>("https://api.spacexdata.com/v4/rockets"),

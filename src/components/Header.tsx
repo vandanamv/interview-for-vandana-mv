@@ -1,5 +1,5 @@
 import Image from "next/image";
-import logo from "@/images/image.png"; // adjust path if needed
+import logo from "@/images/image.png"; 
 
 const Header = () => {
   return (

@@ -1,4 +1,3 @@
-// components/FormattedDate.tsx
 "use client";
 
 import { useEffect, useState } from "react";

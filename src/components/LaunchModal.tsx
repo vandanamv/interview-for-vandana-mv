@@ -1,8 +1,9 @@
-// components/LaunchModal.tsx
 "use client";
 
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import { FaYoutube, FaWikipediaW } from "react-icons/fa";
+import { SiNasa } from "react-icons/si";
 
 const FormattedDate = dynamic(() => import("@/components/FormattedDate"), {
   ssr: false,
@@ -27,7 +28,6 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
     success,
     upcoming,
     flight_number,
-    rocket,
     rocketData: { type: rocketType, name: rocketName, company, country } = {},
   } = launch;
 
@@ -40,7 +40,7 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
       : "bg-yellow-100 text-yellow-800";
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+    <div className="fixed inset-0 bg-gray-200/70 backdrop-sm z-50 flex justify-center items-center">
       <div className="bg-white rounded-lg w-[90%] max-w-md p-4 relative shadow-xl overflow-y-auto max-h-[90vh]">
         <button
           className="absolute top-4 right-4 text-gray-500 hover:text-black"
@@ -49,7 +49,7 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
           &times;
         </button>
 
-        {/* Logo Block */}
+        {/* Header Block */}
         <div className="flex items-start gap-4 mb-4">
           {links.patch?.small && (
             <Image
@@ -75,18 +75,13 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
               {rocketData?.name || "N/A"}
             </p>
 
-            <div className="flex items-center gap-3 mt-1">
+            <div className="flex items-center gap-4 mt-1 text-xl text-gray-600">
               <a
                 href="https://www.nasa.gov"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Image
-                  src="/logos/nasa.png"
-                  alt="NASA"
-                  width={20}
-                  height={20}
-                />
+                <SiNasa className="hover:text-blue-500 transition duration-200" />
               </a>
               {links.wikipedia && (
                 <a
@@ -94,12 +89,7 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Image
-                    src="/logos/wikipedia.png"
-                    alt="Wikipedia"
-                    width={20}
-                    height={20}
-                  />
+                  <FaWikipediaW className="hover:text-blue-500 transition duration-200" />
                 </a>
               )}
               {links.webcast && (
@@ -108,12 +98,7 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Image
-                    src="/logos/youtube.png"
-                    alt="YouTube"
-                    width={20}
-                    height={20}
-                  />
+                  <FaYoutube className="text-red-600 hover:text-red-800 transition duration-200" />
                 </a>
               )}
             </div>
@@ -137,7 +122,7 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
           </p>
         )}
 
-        {/* Meta Information Table Style */}
+        {/* Metadata */}
         <div className="text-sm text-gray-700 divide-y divide-gray-300">
           <div className="flex py-2">
             <span className="font-medium w-1/2">Flight Number</span>

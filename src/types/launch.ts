@@ -6,7 +6,7 @@ export interface Launch {
   upcoming: boolean;
   options: {
   sort: { date_utc: "desc" },
-  populate: ["rocket", "launchpad", "payloads"], // 👈 Add "payloads"
+  populate: ["rocket", "launchpad", "payloads"], 
 },
 
   rocket: {
