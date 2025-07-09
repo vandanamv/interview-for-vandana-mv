@@ -10,8 +10,9 @@ interface Props {
 }
 
 interface RangeItem extends Range {
-  startDate: Date;
-  endDate: Date;
+  startDate?: Date; 
+  endDate?: Date; 
+  key: string;
 }
 
 const quickRanges = [
@@ -46,18 +47,18 @@ export default function DateFilterDropdown({ onDateChange }: Props) {
     setShowPicker(false);
   };
 
-  const handleCalendarChange = (item: RangeItem) => {
-    if (item.startDate && item.endDate) {
-      setRange([
-        {
-          startDate: item.startDate,
-          endDate: item.endDate,
-          key: "selection",
-        },
-      ]);
-      onDateChange(item.startDate, item.endDate);
-    }
-  };
+  const handleCalendarChange = (item: Range) => {
+  if (item.startDate && item.endDate) {
+    setRange([
+      {
+        startDate: item.startDate,
+        endDate: item.endDate,
+        key: "selection",
+      },
+    ]);
+    onDateChange(item.startDate, item.endDate);
+  }
+};
 
   return (
     <>
