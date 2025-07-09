@@ -4,11 +4,17 @@ export interface Launch {
   date_utc: string;
   success: boolean;
   upcoming: boolean;
+  links: {
+    patch: {
+      small?: string;
+      large?: string;
+    };
+    [key: string]: any;
+  };
   options: {
-  sort: { date_utc: "desc" },
-  populate: ["rocket", "launchpad", "payloads"], 
-},
-
+    sort: { date_utc: "desc" },
+    populate: ["rocket", "launchpad", "payloads"],
+  },
   rocket: {
     name: string;
   };

@@ -41,8 +41,16 @@ export default function DateFilterDropdown({ onDateChange }: Props) {
   };
 
   const handleCalendarChange = (item: Range) => {
-    setRange([item]);
-    onDateChange(item.startDate!, item.endDate!);
+    if (item.startDate && item.endDate) {
+      setRange([
+        {
+          startDate: item.startDate as Date,
+          endDate: item.endDate as Date,
+          key: "selection",
+        },
+      ]);
+      onDateChange(item.startDate, item.endDate);
+    }
   };
 
   return (
