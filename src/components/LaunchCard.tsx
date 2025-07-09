@@ -1,5 +1,6 @@
 import { Launch } from "@/types/launch";
 import Image from 'next/image';
+
 interface Props {
   launch: Launch;
   onClick: () => void;
@@ -14,6 +15,8 @@ export default function LaunchCard({ launch, onClick }: Props) {
       <Image
         src={launch.links.patch.small || "/fallback.png"}
         alt={launch.name}
+        width={64} 
+        height={64} 
         className="w-16 h-16 object-contain mb-4"
       />
       <h2 className="text-lg font-semibold mb-2">{launch.name}</h2>

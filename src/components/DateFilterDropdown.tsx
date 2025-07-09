@@ -1,9 +1,17 @@
-"use client";
 import { useState } from "react";
 import { DateRangePicker, Range } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { FaCalendarAlt } from "react-icons/fa";
+
+interface Props {
+  onDateChange: (startDate: Date, endDate: Date) => void;
+}
+
+interface RangeItem extends Range {
+  startDate: Date;
+  endDate: Date;
+}
 
 const quickRanges = [
   { label: "Past week", days: 7 },
@@ -14,19 +22,16 @@ const quickRanges = [
   { label: "Past 2 years", days: 730 },
 ];
 
-interface Props {
-  onDateChange: (startDate: Date, endDate: Date) => void;
-}
-
 export default function DateFilterDropdown({ onDateChange }: Props) {
   const [showPicker, setShowPicker] = useState(false);
-  const [range, setRange] = useState([
+  const [range, setRange] = useState<RangeItem[]>([
     {
       startDate: new Date(new Date().setMonth(new Date().getMonth() - 6)),
       endDate: new Date(),
       key: "selection",
     },
   ]);
+
   const [selectedRangeLabel, setSelectedRangeLabel] = useState("Past 6 months");
 
   const applyQuickRange = (days: number, label: string) => {
@@ -40,12 +45,12 @@ export default function DateFilterDropdown({ onDateChange }: Props) {
     setShowPicker(false);
   };
 
-  const handleCalendarChange = (item: Range) => {
+  const handleCalendarChange = (item: RangeItem) => {
     if (item.startDate && item.endDate) {
       setRange([
         {
-          startDate: item.startDate as Date,
-          endDate: item.endDate as Date,
+          startDate: item.startDate,
+          endDate: item.endDate,
           key: "selection",
         },
       ]);
