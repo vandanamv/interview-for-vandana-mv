@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 
 // React and custom hooks/components imports
 import { useState } from "react";
@@ -9,7 +9,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import EmptyState from "@/components/EmptyState";
 import Pagination from "@/components/Pagination";
 import Header from "@/components/Header";
-import DateFilterDropdown from "@/components/DateFilterDropdown"; // Dropdown for date range filtering
+import DateFilterDropdown from "@/components/DateFilterDropdown";
 
 export default function HomePage() {
   const [filter, setFilter] = useState<"all" | "upcoming" | "successful" | "failed">("all");
@@ -20,11 +20,13 @@ export default function HomePage() {
     end: new Date(),
   });
 
-  const { launches, loading, error } = useLaunches(filter, dateRange);
-  const launchesPerPage = 12; 
-  const totalPages = Math.ceil(launches.length / launchesPerPage); 
-  const startIndex = (currentPage - 1) * launchesPerPage; 
-  const paginatedLaunches = launches.slice(startIndex, startIndex + launchesPerPage); 
+  // Update the call to useLaunches to pass a single object argument
+  const { launches, loading, error } = useLaunches({ filter, dateRange });
+
+  const launchesPerPage = 12;
+  const totalPages = Math.ceil(launches.length / launchesPerPage);
+  const startIndex = (currentPage - 1) * launchesPerPage;
+  const paginatedLaunches = launches.slice(startIndex, startIndex + launchesPerPage);
 
   return (
     <div className="min-h-screen bg-white">
@@ -34,22 +36,20 @@ export default function HomePage() {
         <div className="flex justify-between items-center mb-4">
           <DateFilterDropdown
             onDateChange={(start, end) => {
-              setDateRange({ start, end }); 
-              setCurrentPage(1); 
+              setDateRange({ start, end });
+              setCurrentPage(1);
             }}
           />
           <FilterTabs
             current={filter}
             onChange={(f) => {
               setFilter(f);
-              setCurrentPage(1); 
+              setCurrentPage(1);
             }}
           />
         </div>
-
         {/* Error message if data fetching fails */}
         {error && <p className="text-center text-red-500">{error}</p>}
-
         <div className="overflow-x-auto mt-2">
           {/* Launches table */}
           <table className="min-w-full bg-white shadow-md rounded-xl overflow-hidden text-sm text-black">
@@ -79,7 +79,7 @@ export default function HomePage() {
                   <tr
                     key={launch.id}
                     className="hover:bg-blue-50 cursor-pointer"
-                    onClick={() => setSelectedLaunch(launch)} 
+                    onClick={() => setSelectedLaunch(launch)}
                   >
                     <td className="px-4 py-3">
                       {(startIndex + index + 1).toString().padStart(2, "0")}
@@ -127,7 +127,6 @@ export default function HomePage() {
               )}
             </tbody>
           </table>
-
           {/* Pagination controls */}
           <div className="flex justify-end mt-4 pr-4">
             <Pagination
@@ -137,7 +136,6 @@ export default function HomePage() {
             />
           </div>
         </div>
-
         {/* Modal for launch details */}
         <LaunchModal
           launch={selectedLaunch}
