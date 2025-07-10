@@ -15,14 +15,6 @@ interface PayloadData {
   orbit?: string;
 }
 
-interface Links {
-  patch?: {
-    small?: string;
-    large?: string;
-  };
-  wikipedia?: string;
-  webcast?: string;
-}
 
 export interface Launch {
   id: string;
@@ -51,12 +43,9 @@ export interface EnrichedLaunch {
   id: string;
   name: string;
   date_utc: string;
-  success: boolean | null;
   upcoming: boolean;
-  rocketData?: RocketData;
+  success?: boolean | null;
   launchpadData?: LaunchpadData;
+  rocketData?: RocketData;
   payloadData?: PayloadData;
-  details?: string;
-  links: Links;
-  flight_number?: number;
 }

@@ -20,7 +20,7 @@ export default function HomePage() {
     end: new Date(),
   });
 
-  // ✅ FIXED ARGUMENT STRUCTURE
+
 const { launches, loading, error } = useLaunches({ filter, dateRange });
 
   const launchesPerPage = 12;
