@@ -4,19 +4,16 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { FaYoutube, FaWikipediaW } from "react-icons/fa";
 import { SiNasa } from "react-icons/si";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+import { EnrichedLaunch } from "@/hooks/useLaunches";
 
 const FormattedDate = dynamic(() => import("@/components/FormattedDate"), {
   ssr: false,
 });
 
-import { EnrichedLaunch } from "@/hooks/useLaunches";
-
 interface LaunchModalProps {
   launch: EnrichedLaunch | null;
   onClose: () => void;
 }
-
 
 export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
   if (!launch) return null;
@@ -25,15 +22,19 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
     name,
     details,
     links,
-    rocketData,
     launchpadData,
     payloadData,
     date_utc,
     success,
     upcoming,
     flight_number,
-    rocketData: { type: rocketType, name: rocketName, company, country } = {},
+    rocketData: rocket = {},
   } = launch;
+
+  const rocketName = rocket.name || "N/A";
+  const rocketType = rocket.type || "N/A";
+  const company = rocket.company || "N/A";
+  const country = rocket.country || "N/A";
 
   const status = upcoming ? "Upcoming" : success ? "Success" : "Failed";
   const statusColor =
@@ -75,9 +76,7 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
               </span>
             </div>
 
-            <p className="text-sm text-gray-700 font-medium">
-              {rocketData?.name || "N/A"}
-            </p>
+            <p className="text-sm text-gray-700 font-medium">{rocketName}</p>
 
             <div className="flex items-center gap-4 mt-1 text-xl text-gray-600">
               <a
@@ -130,7 +129,7 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
         <div className="text-sm text-gray-700 divide-y divide-gray-300">
           <div className="flex py-2">
             <span className="font-medium w-1/2">Flight Number</span>
-            <span className="pl-4">{flight_number}</span>
+            <span className="pl-4">{flight_number ?? "N/A"}</span>
           </div>
           <div className="flex py-2">
             <span className="font-medium w-1/2">Mission Name</span>
@@ -138,19 +137,19 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
           </div>
           <div className="flex py-2">
             <span className="font-medium w-1/2">Rocket Type</span>
-            <span className="pl-4">{rocketType || "N/A"}</span>
+            <span className="pl-4">{rocketType}</span>
           </div>
           <div className="flex py-2">
             <span className="font-medium w-1/2">Rocket Name</span>
-            <span className="pl-4">{rocketName || "N/A"}</span>
+            <span className="pl-4">{rocketName}</span>
           </div>
           <div className="flex py-2">
             <span className="font-medium w-1/2">Manufacturer</span>
-            <span className="pl-4">{company || "N/A"}</span>
+            <span className="pl-4">{company}</span>
           </div>
           <div className="flex py-2">
             <span className="font-medium w-1/2">Nationality</span>
-            <span className="pl-4">{country || "N/A"}</span>
+            <span className="pl-4">{country}</span>
           </div>
           <div className="flex py-2">
             <span className="font-medium w-1/2">Launch Date</span>

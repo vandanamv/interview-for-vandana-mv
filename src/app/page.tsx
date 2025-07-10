@@ -1,5 +1,5 @@
+//src/app/page.tsx
 "use client"; 
-
 // React and custom hooks/components imports
 import { useState } from "react";
 import { useLaunches, EnrichedLaunch } from "@/hooks/useLaunches";
@@ -10,7 +10,6 @@ import EmptyState from "@/components/EmptyState";
 import Pagination from "@/components/Pagination";
 import Header from "@/components/Header";
 import DateFilterDropdown from "@/components/DateFilterDropdown"; // Dropdown for date range filtering
-
 export default function HomePage() {
   const [filter, setFilter] = useState<"all" | "upcoming" | "successful" | "failed">("all");
   const [selectedLaunch, setSelectedLaunch] = useState<EnrichedLaunch | null>(null);
@@ -19,13 +18,11 @@ export default function HomePage() {
     start: new Date(new Date().setMonth(new Date().getMonth() - 6)),
     end: new Date(),
   });
-
-  const { launches, loading, error } = useLaunches(filter, dateRange);
-  const launchesPerPage = 12; 
-  const totalPages = Math.ceil(launches.length / launchesPerPage); 
-  const startIndex = (currentPage - 1) * launchesPerPage; 
-  const paginatedLaunches = launches.slice(startIndex, startIndex + launchesPerPage); 
-
+const { launches, loading, error } = useLaunches(filter, dateRange);
+  const launchesPerPage = 12;
+  const totalPages = Math.ceil(launches.length / launchesPerPage);
+  const startIndex = (currentPage - 1) * launchesPerPage;
+  const paginatedLaunches = launches.slice(startIndex, startIndex + launchesPerPage);
   return (
     <div className="min-h-screen bg-white">
       {/* App header */}
@@ -46,10 +43,8 @@ export default function HomePage() {
             }}
           />
         </div>
-
         {/* Error message if data fetching fails */}
         {error && <p className="text-center text-red-500">{error}</p>}
-
         <div className="overflow-x-auto mt-2">
           {/* Launches table */}
           <table className="min-w-full bg-white shadow-md rounded-xl overflow-hidden text-sm text-black">
@@ -127,7 +122,6 @@ export default function HomePage() {
               )}
             </tbody>
           </table>
-
           {/* Pagination controls */}
           <div className="flex justify-end mt-4 pr-4">
             <Pagination
@@ -137,7 +131,6 @@ export default function HomePage() {
             />
           </div>
         </div>
-
         {/* Modal for launch details */}
         <LaunchModal
           launch={selectedLaunch}

@@ -24,3 +24,5 @@ export default function LaunchCard({ launch, onClick }: Props) {
     </div>
   );
 }
+
+
