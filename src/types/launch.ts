@@ -2,7 +2,7 @@ export interface Launch {
   id: string;
   name: string;
   date_utc: string;
-  success: boolean;
+  success: boolean ;
   upcoming: boolean;
   options: {
   sort: { date_utc: "desc" },

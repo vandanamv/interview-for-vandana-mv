@@ -1,3 +1,5 @@
+"use client";
+
 interface Props {
   message?: string;
 }
@@ -5,9 +7,10 @@ interface Props {
 export default function EmptyState({ message = "No results found for the specified filter" }: Props) {
   return (
     <tr>
-      <td colSpan={7}>
-        <div className="flex justify-center items-center h-48 text-gray-500 text-sm">
-          {message}
+      <td colSpan={28} className="py-48 text-center">
+        <div className="inline-block">
+          <div className="h-8 w-8 mx-auto"></div>
+          <p className="text-gray-500 mt-2">{message}</p>
         </div>
       </td>
     </tr>
