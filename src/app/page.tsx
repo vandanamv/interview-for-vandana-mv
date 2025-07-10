@@ -1,103 +1,142 @@
-import Image from "next/image";
-
-export default function Home() {
+//src/app/page.tsx
+"use client"; 
+// React and custom hooks/components imports
+import { useState } from "react";
+import { useLaunches, EnrichedLaunch } from "@/hooks/useLaunches";
+import LaunchModal from "@/components/LaunchModal";
+import FilterTabs from "@/components/FilterTabs";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import EmptyState from "@/components/EmptyState";
+import Pagination from "@/components/Pagination";
+import Header from "@/components/Header";
+import DateFilterDropdown from "@/components/DateFilterDropdown"; // Dropdown for date range filtering
+export default function HomePage() {
+  const [filter, setFilter] = useState<"all" | "upcoming" | "successful" | "failed">("all");
+  const [selectedLaunch, setSelectedLaunch] = useState<EnrichedLaunch | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [dateRange, setDateRange] = useState<{ start: Date; end: Date }>({
+    start: new Date(new Date().setMonth(new Date().getMonth() - 6)),
+    end: new Date(),
+  });
+const { launches, loading, error } = useLaunches(filter, dateRange );
+  const launchesPerPage = 12;
+  const totalPages = Math.ceil(launches.length / launchesPerPage);
+  const startIndex = (currentPage - 1) * launchesPerPage;
+  const paginatedLaunches = launches.slice(startIndex, startIndex + launchesPerPage);
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-white">
+      {/* App header */}
+      <Header />
+      <main className="max-w-6xl mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-4">
+          <DateFilterDropdown
+            onDateChange={(start, end) => {
+              setDateRange({ start, end }); 
+              setCurrentPage(1); 
+            }}
+          />
+          <FilterTabs
+            current={filter}
+            onChange={(f) => {
+              setFilter(f);
+              setCurrentPage(1); 
+            }}
+          />
         </div>
+        {/* Error message if data fetching fails */}
+        {error && <p className="text-center text-red-500">{error}</p>}
+        <div className="overflow-x-auto mt-2">
+          {/* Launches table */}
+          <table className="min-w-full bg-white shadow-md rounded-xl overflow-hidden text-sm text-black">
+            <thead className="bg-gray-100 text-black font-semibold">
+              <tr>
+                <th className="px-4 py-3 text-left">No:</th>
+                <th className="px-4 py-3 text-left">Launched (UTC)</th>
+                <th className="px-4 py-3 text-left">Location</th>
+                <th className="px-4 py-3 text-left">Mission</th>
+                <th className="px-4 py-3 text-left">Orbit</th>
+                <th className="px-4 py-3 text-left">Launch Status</th>
+                <th className="px-4 py-3 text-left">Rocket</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* Show loading spinner while fetching data */}
+              {loading ? (
+                <tr>
+                  <td colSpan={7} className="py-48">
+                    <LoadingSpinner />
+                  </td>
+                </tr>
+              ) : paginatedLaunches.length === 0 ? (
+                <EmptyState message="No results found for the specified filter" />
+              ) : (
+                paginatedLaunches.map((launch, index) => (
+                  <tr
+                    key={launch.id}
+                    className="hover:bg-blue-50 cursor-pointer"
+                    onClick={() => setSelectedLaunch(launch)} 
+                  >
+                    <td className="px-4 py-3">
+                      {(startIndex + index + 1).toString().padStart(2, "0")}
+                    </td>
+                    <td className="px-4 py-3">
+                      {/* Format launch date in UTC */}
+                      {new Date(launch.date_utc).toLocaleString("en-GB", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false,
+                        timeZone: "UTC",
+                      }).replace(",", " at")}
+                    </td>
+                    <td className="px-4 py-3">
+                      {launch.launchpadData?.locality || "N/A"}
+                    </td>
+                    <td className="px-4 py-3">{launch.name}</td>
+                    <td className="px-4 py-3">
+                      {launch.payloadData?.orbit?.toUpperCase() || "N/A"}
+                    </td>
+                    <td className="px-4 py-3">
+                      {/* Show status badge based on launch status */}
+                      {launch.upcoming ? (
+                        <span className="inline-block px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full shadow-sm">
+                          Upcoming
+                        </span>
+                      ) : launch.success === true ? (
+                        <span className="inline-block px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full shadow-sm">
+                          Success
+                        </span>
+                      ) : (
+                        <span className="inline-block px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full shadow-sm">
+                          Failed
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
+                      {launch.rocketData?.name || "N/A"}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+          {/* Pagination controls */}
+          <div className="flex justify-end mt-4 pr-4">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
+          </div>
+        </div>
+        {/* Modal for launch details */}
+        <LaunchModal
+          launch={selectedLaunch}
+          onClose={() => setSelectedLaunch(null)}
+        />
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
