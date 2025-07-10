@@ -59,6 +59,10 @@ export const useLaunches = (filter: FilterType) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // The useEffect below fetches and filters launches whenever the filter or its dependencies change.
+  // If you update the filter type to an object (e.g., { filter, dateRange }),
+  // make sure to update the dependency array to [filter, dateRange.start, dateRange.end]
+  // to avoid infinite re-renders.
   useEffect(() => {
     const fetchAll = async () => {
       try {
@@ -102,7 +106,7 @@ export const useLaunches = (filter: FilterType) => {
     };
 
     fetchAll();
-  }, [filter]);
+  }, [filter]); // ⚠️ If filter is an object, use [filter, filter.dateRange?.start, filter.dateRange?.end]
 
   return { launches, loading, error };
 };
