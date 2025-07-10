@@ -21,20 +21,20 @@ export default function LaunchModal({ launch, onClose }: LaunchModalProps) {
   const {
     name,
     details,
-    links,
+    links = {},
     launchpadData,
     payloadData,
     date_utc,
     success,
     upcoming,
     flight_number,
-    rocketData: rocket = {},
+    rocketData,
   } = launch;
 
-  const rocketName = rocket.name || "N/A";
-  const rocketType = rocket.type || "N/A";
-  const company = rocket.company || "N/A";
-  const country = rocket.country || "N/A";
+  const rocketName = rocketData?.name || "N/A";
+  const rocketType = rocketData?.type || "N/A";
+  const company = rocketData?.company || "N/A";
+  const country = rocketData?.country || "N/A";
 
   const status = upcoming ? "Upcoming" : success ? "Success" : "Failed";
   const statusColor =

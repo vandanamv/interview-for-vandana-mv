@@ -73,6 +73,15 @@ export default function DateFilterDropdown({ onDateChange }: Props) {
       {showPicker && (
         <div className="fixed inset-0 bg-gray-200/70 backdrop-sm z-50 flex justify-center items-center">
           <div className="relative flex bg-white rounded-lg shadow-lg p-4 border border-gray-200">
+            {/* X button to close the calendar */}
+            <button
+              onClick={() => setShowPicker(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-black text-lg font-bold"
+              aria-label="Close calendar"
+              type="button"
+            >
+              ×
+            </button>
             <div className="flex flex-col gap-2 text-sm text-gray-800 w-48 mr-4 border-r pr-2">
               {quickRanges.map((r) => (
                 <button
@@ -85,18 +94,21 @@ export default function DateFilterDropdown({ onDateChange }: Props) {
               ))}
             </div>
             <style jsx global>{`
-              .rdrDateDisplayWrapper {
-                display: none !important;
-              }
-              .rdrDefinedRangesWrapper,
-              .rdrStaticRanges {
-                display: none !important;
-              }
-              .rdrMonthAndYearWrapper {
-                display: flex;
-                justify-content: center;
-              }
-            `}</style>
+  .rdrDateDisplayWrapper {
+    display: none !important;
+  }
+  .rdrDefinedRangesWrapper,
+  .rdrStaticRanges {
+    display: none !important;
+  }
+  .rdrMonthAndYearWrapper {
+    display: flex;
+    justify-content: center;
+  }
+  .rdrMonth .rdrMonthName {
+    display: none !important;
+  }
+`}</style>
             <DateRangePicker
               ranges={range}
               onChange={handleCalendarChange}

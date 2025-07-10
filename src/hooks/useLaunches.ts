@@ -48,21 +48,18 @@ export interface EnrichedLaunch extends Launch {
     [key: string]: unknown;
   };
   flight_number?: number;
-  // Make success compatible with both boolean and null/undefined
-  success?: boolean | null;
+  
 }
 
 type FilterType = "all" | "upcoming" | "successful" | "failed";
+
+
 
 export const useLaunches = (filter: FilterType) => {
   const [launches, setLaunches] = useState<EnrichedLaunch[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // The useEffect below fetches and filters launches whenever the filter or its dependencies change.
-  // If you update the filter type to an object (e.g., { filter, dateRange }),
-  // make sure to update the dependency array to [filter, dateRange.start, dateRange.end]
-  // to avoid infinite re-renders.
   useEffect(() => {
     const fetchAll = async () => {
       try {
@@ -106,7 +103,8 @@ export const useLaunches = (filter: FilterType) => {
     };
 
     fetchAll();
-  }, [filter]); // ⚠️ If filter is an object, use [filter, filter.dateRange?.start, filter.dateRange?.end]
+    // Only depend on the primitive filter string to avoid infinite re-renders.
+  }, [filter]);
 
   return { launches, loading, error };
 };

@@ -18,7 +18,7 @@ export default function HomePage() {
     start: new Date(new Date().setMonth(new Date().getMonth() - 6)),
     end: new Date(),
   });
-const { launches, loading, error } = useLaunches(filter, dateRange);
+const { launches, loading, error } = useLaunches(filter, dateRange );
   const launchesPerPage = 12;
   const totalPages = Math.ceil(launches.length / launchesPerPage);
   const startIndex = (currentPage - 1) * launchesPerPage;
